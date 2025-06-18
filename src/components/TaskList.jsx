@@ -11,7 +11,7 @@ const TaskList = ({ tasks, onToggleTaskComplete, onRemoveTask}) => {
           id={task.id}
           title={task.title}
           isComplete={task.isComplete}
-          ToggleTaskComplete={onToggleTaskComplete}
+          toggleTaskComplete={onToggleTaskComplete}
           removeTask={onRemoveTask}
         />
       );
