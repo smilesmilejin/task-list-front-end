@@ -2,6 +2,8 @@ import axios from 'axios';
 import TaskList from './components/TaskList.jsx';
 import './App.css';
 import { useState, useEffect } from 'react';
+import NewTaskForm from './components/NewTaskForm.jsx';
+
 
 // const TASKS = [
 //   {
@@ -17,6 +19,18 @@ import { useState, useEffect } from 'react';
 // ];
 
 const kBaseUrl = 'http://127.0.0.1:5000';
+
+const postTaskApi = (newTaskData) => {
+  return axios.post(`${kBaseUrl}/tasks`, newTaskData) // Send a HTTP POST request, newTaskData is the the request body of the POST
+    .then (response => {
+      console.log(response.data.task);
+      return convertFromApi(response.data.task); // pass the reponse to the the function
+    })
+    .catch (error => {
+      console.log(error);
+    });
+};
+
 
 const getAllTasksApi = () => {
   return axios.get(`${kBaseUrl}/tasks`) // make a GET request
@@ -145,6 +159,13 @@ const App = () => {
   //   });
   // };
 
+  const postTask = (newTaskData) => {
+    postTaskApi(newTaskData)
+      .then(newTask => {
+        setTaskData(prevTasks => [newTask, ...prevTasks]); // prevTasks is the current list of tasks before this update.[newTask, ...prevTasks] creates a new array that adds the new task to the top of the list.
+      });
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -152,6 +173,7 @@ const App = () => {
       </header>
       <main>
         <div>{<TaskList tasks={taskData} onToggleTaskComplete={toggleTaskComplete} onRemoveTask={removeTask} />}</div>
+        <NewTaskForm onPostTask={postTask}/>
       </main>
     </div>
   );
